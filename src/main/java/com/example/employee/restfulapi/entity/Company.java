@@ -1,17 +1,22 @@
 package com.example.employee.restfulapi.entity;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name ="company")
 public class Company {
     @Id
     @GeneratedValue
     private Long id;
+    @Column(name="companyName")
     private String companyName;
+    @Column(name="employeesNumber")
     private Integer employeesNumber;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "company")
+    public Set<Employee> employees=new HashSet<Employee>();
 
     public Company() {
     }
@@ -19,6 +24,14 @@ public class Company {
     public Company(String companyName, Integer employeesNumber) {
         this.companyName = companyName;
         this.employeesNumber = employeesNumber;
+    }
+
+    public Set<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(Set<Employee> employees) {
+        this.employees = employees;
     }
 
     public Long getId() {
@@ -43,5 +56,10 @@ public class Company {
 
     public void setEmployeesNumber(Integer employeesNumber) {
         this.employeesNumber = employeesNumber;
+    }
+
+    public void addEmployee(Employee employee){
+        this.employees.add(employee);
+        employee.setCompany(this);
     }
 }

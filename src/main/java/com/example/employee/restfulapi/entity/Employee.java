@@ -1,10 +1,10 @@
 package com.example.employee.restfulapi.entity;
 
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
+@Table(name = "employee")
 public class Employee {
     @Id
     @GeneratedValue
@@ -13,25 +13,29 @@ public class Employee {
     private Integer age;
     private String gender;
     private Integer salary;
-    private Long companyId;
+
+    @JsonBackReference
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE}, optional = true)
+    @JoinColumn(name = "companyId")//外键列的列名
+    private Company company;
 
     public Employee() {
     }
 
-    public Employee(String name, Integer age, String gender, Integer salary, Long companyId) {
+    public Employee(String name, Integer age, String gender, Integer salary,Company company) {
         this.name = name;
         this.age = age;
         this.gender = gender;
         this.salary = salary;
-        this.companyId = companyId;
+        this.company = company;
     }
 
-    public Long getCompanyId() {
-        return companyId;
+    public Company getCompany() {
+        return company;
     }
 
-    public void setCompanyId(Long companyId) {
-        this.companyId = companyId;
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     public Integer getSalary() {
@@ -42,7 +46,7 @@ public class Employee {
         this.salary = salary;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -58,7 +62,6 @@ public class Employee {
     public Integer getAge() {
         return age;
     }
-
 
     public String getGender() {
         return gender;
